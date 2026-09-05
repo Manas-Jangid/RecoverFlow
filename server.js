@@ -40,6 +40,7 @@ const recoverySeed = [
     action: 'Send instant UPI fallback payment link via WhatsApp (expires in 20 min)',
     channel: 'WhatsApp consent: yes',
     urgency: 'high',
+    confidence: '97.2%',
     attempts: 0,
     outcome: 'recoverable',
     customerPhone: '+91 98201 44102',
@@ -57,6 +58,7 @@ const recoverySeed = [
     action: 'Send one neutral cart reservation reminder with direct 1-click restore link',
     channel: 'Email consent: yes',
     urgency: 'medium',
+    confidence: '84.6%',
     attempts: 0,
     outcome: 'recoverable',
     customerEmail: 'nisha.k@example.com',
@@ -74,6 +76,7 @@ const recoverySeed = [
     action: 'Trigger in-app notification & send WhatsApp card re-tokenization link',
     channel: 'WhatsApp consent: yes',
     urgency: 'high',
+    confidence: '99.4%',
     attempts: 0,
     outcome: 'recoverable',
     customerPhone: '+91 98112 55901',
@@ -91,6 +94,7 @@ const recoverySeed = [
     action: 'Send Tier-2 compliant B2B reminder with Razorpay Smart Invoice link & split-pay option',
     channel: 'Email consent: yes',
     urgency: 'high',
+    confidence: '91.8%',
     attempts: 1,
     outcome: 'recoverable',
     customerEmail: 'ap@meridianfoods.co.in',
@@ -108,6 +112,7 @@ const recoverySeed = [
     action: 'Mandate Retry Sequencer: Auto-reschedule debit execution to 1st of month at 10:15 AM (93.8% success window)',
     channel: 'SMS consent: yes',
     urgency: 'medium',
+    confidence: '93.8%',
     attempts: 1,
     outcome: 'recoverable',
     customerPhone: '+91 97170 33819',
@@ -129,6 +134,7 @@ const recoverySeed = [
     action: 'Initiate AI Hinglish Voice Agent Call with dynamic payment link dispatch',
     channel: 'Voice consent: yes',
     urgency: 'urgent',
+    confidence: '87.4%',
     attempts: 0,
     outcome: 'recoverable',
     customerPhone: '+91 99200 81234',
@@ -149,6 +155,7 @@ const recoverySeed = [
     action: 'Execute automated PTP reconciliation check; send friendly settlement link',
     channel: 'WhatsApp consent: yes',
     urgency: 'medium',
+    confidence: '96.5%',
     attempts: 1,
     outcome: 'recoverable',
     customerPhone: '+91 98450 12890',
@@ -171,6 +178,7 @@ const recoverySeed = [
     action: 'Outreach strictly prohibited by regulatory guardrail',
     channel: 'Do not contact',
     urgency: 'low',
+    confidence: '100% (Rule Match)',
     attempts: 0,
     outcome: 'stopped',
     stopReason: 'Customer is on active Do-Not-Contact (DNC) registry per RBI fair practice code.'
@@ -187,6 +195,7 @@ const recoverySeed = [
     action: 'Outreach stopped to prevent harassment',
     channel: 'Contact cap reached',
     urgency: 'low',
+    confidence: '100% (Rule Match)',
     attempts: 2,
     outcome: 'stopped',
     stopReason: 'Maximum contact frequency cap (2 attempts/72h) exceeded. Cooldown active for 7 days.'
@@ -203,6 +212,7 @@ const recoverySeed = [
     action: 'Automated collection frozen pending dispute resolution',
     channel: 'Dispute freeze',
     urgency: 'high',
+    confidence: '100% (Rule Match)',
     attempts: 1,
     outcome: 'stopped',
     stopReason: 'Case is frozen under regulatory dispute protections until merchant support resolves ticket.'
@@ -713,6 +723,7 @@ const server = http.createServer(async (req, res) => {
         action: analyzed.action,
         channel: payload.channelConsent ? `${payload.channel || 'WhatsApp'} consent: yes` : 'Channel consent: pending',
         urgency: analyzed.urgency,
+        confidence: payload.isDNC ? '100% (Rule Match)' : (analyzed.confidence || '92.4%'),
         attempts: 0,
         outcome: payload.isDNC ? 'stopped' : 'recoverable',
         stopReason: payload.isDNC ? 'Customer has active Do-Not-Contact flag.' : undefined
@@ -866,7 +877,8 @@ function analyzeSignal(payload) {
       errorCode: code || 'GATEWAY_DEGRADATION',
       diagnosis: 'Payment route degraded at issuer level. Customer session remained active.',
       action: 'Offer alternative UPI routing via fresh, expiring payment link.',
-      urgency: 'high'
+      urgency: 'high',
+      confidence: '97.2%'
     };
   }
   if (kind === 'abandoned' || code.includes('CART')) {
@@ -875,7 +887,8 @@ function analyzeSignal(payload) {
       errorCode: code || 'CHECKOUT_STAGE_DROPOFF',
       diagnosis: 'High-intent shopper abandoned during final checkout step.',
       action: 'Send one neutral cart reservation reminder with direct checkout link.',
-      urgency: 'medium'
+      urgency: 'medium',
+      confidence: '85.4%'
     };
   }
   if (kind === 'subscription' || code.includes('MANDATE') || code.includes('TOKEN')) {
@@ -884,7 +897,8 @@ function analyzeSignal(payload) {
       errorCode: code || 'RECURRING_MANDATE_DECLINE',
       diagnosis: 'Recurring auto-debit declined due to token expiration or mandate limit.',
       action: 'Trigger in-app notification & WhatsApp token renewal link.',
-      urgency: 'high'
+      urgency: 'high',
+      confidence: '98.9%'
     };
   }
   if (kind === 'overdue' || code.includes('INVOICE')) {
@@ -893,7 +907,8 @@ function analyzeSignal(payload) {
       errorCode: code || 'B2B_RECEIVABLE_OVERDUE',
       diagnosis: 'Invoice aged past contractual credit terms. Finance contact identified.',
       action: 'Send compliant B2B dunning notice with Razorpay Smart Invoice link.',
-      urgency: 'high'
+      urgency: 'high',
+      confidence: '92.1%'
     };
   }
   if (kind === 'voice') {
@@ -902,7 +917,8 @@ function analyzeSignal(payload) {
       errorCode: code || 'VOICE_CALL_ELIGIBLE',
       diagnosis: 'High-value account unresponsive to text notifications.',
       action: 'Initiate polite, natural Hinglish conversational voice recovery call.',
-      urgency: 'urgent'
+      urgency: 'urgent',
+      confidence: '88.3%'
     };
   }
   return {
@@ -910,7 +926,8 @@ function analyzeSignal(payload) {
     errorCode: 'GENERIC_PAYMENT_FAILURE',
     diagnosis: 'Payment transaction failed. Customer still within recovery window.',
     action: 'Send single verified payment link with transparent reason.',
-    urgency: 'medium'
+    urgency: 'medium',
+    confidence: '81.5%'
   };
 }
 

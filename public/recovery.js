@@ -284,6 +284,8 @@ function renderInspector() {
     $('inspDiagnosis').textContent = 'Select a case from the queue to inspect root cause diagnosis, compliance guardrail evaluation, and proposed action.';
     $('inspActionText').textContent = 'No action selected.';
     $('inspDraftMsg').textContent = 'Draft template preview will appear here.';
+    $('inspErrorCode').textContent = 'Code: None';
+    $('inspConfidence').textContent = 'Confidence: --';
     $('btnExecuteOne').disabled = true;
     $('voiceWidget').style.display = 'none';
     $('mandateWidget').style.display = 'none';
@@ -318,7 +320,7 @@ function renderInspector() {
     </div>
   `;
   $('inspErrorCode').textContent = `Code: ${c.errorCode || 'ERR_REVENUE_RISK'}`;
-  $('inspConfidence').textContent = `Confidence: ${c.outcome === 'stopped' ? '0% (Suppressed)' : '94.8%'}`;
+  $('inspConfidence').textContent = `Confidence: ${c.confidence || (c.outcome === 'stopped' ? '100% (Rule Match)' : '92.4%')}`;
 
   // Compliance Checks
   const hasConsent = /consent: yes/i.test(c.channel);
