@@ -15,9 +15,10 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# IDE directories
+# IDE & agent directories
 .vscode/
 .idea/
+.agents/
 *.suo
 *.ntvs*
 *.njsproj
