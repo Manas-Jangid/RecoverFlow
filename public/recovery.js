@@ -1,5 +1,5 @@
-// RecoverFlow — Autonomous AI Revenue Recovery & Dunning Intelligence Engine
-// Razorpay AI Hackathon Submission
+// RecoverFlow: Autonomous Revenue Recovery & Dunning Intelligence Engine
+// Built for Razorpay AI Hackathon (Track: AI Revenue Recovery)
 
 let cases = [];
 let selected = null;
@@ -33,14 +33,14 @@ async function checkApiConfig() {
     const res = await fetch('/api/config');
     const data = await res.json();
     if (data.live) {
-      $('apiModeBadge').textContent = 'RAZORPAY TEST MODE';
-      $('apiModeBadge').style.background = '#e0f2fe';
-      $('apiModeBadge').style.color = '#0369a1';
+      $('apiModeBadge').textContent = 'Razorpay Test Mode';
+      $('apiModeBadge').style.background = '#f0fdf4';
+      $('apiModeBadge').style.color = '#166534';
     } else {
-      $('apiModeBadge').textContent = 'SAFE SIMULATED SANDBOX';
+      $('apiModeBadge').textContent = 'Simulated Sandbox';
     }
   } catch {
-    $('apiModeBadge').textContent = 'OFFLINE LOCAL SIM';
+    $('apiModeBadge').textContent = 'Offline Simulation';
   }
 }
 
@@ -56,9 +56,9 @@ async function fetchInitialData() {
     ptpRecords = await ptpRes.json();
     offlineDemo = false;
   } catch (err) {
-    console.warn('Backend API unavailable, falling back to local simulation mode:', err);
+    console.warn('Backend API unavailable, using local simulation mode:', err);
     offlineDemo = true;
-    $('apiModeBadge').textContent = 'OFFLINE LOCAL SIM';
+    $('apiModeBadge').textContent = 'Offline Simulation';
     recordAudit('offline_mode_detected', 'API server unreachable; operating in safe local simulation mode.');
   }
 
@@ -125,6 +125,13 @@ function bindEvents() {
   $('btnCancelModal').onclick = closeModal;
   $('injectForm').onsubmit = handleInjectSignal;
 
+  // Compliance Policy Modal Handlers
+  $('btnPolicyModal').onclick = () => openComplianceModal('rbi');
+  $('btnTosModal').onclick = () => openComplianceModal('tos');
+  $('btnPrivacyModal').onclick = () => openComplianceModal('privacy');
+  $('closeComplianceModal').onclick = closeComplianceModal;
+  $('btnCloseComplianceBtn').onclick = closeComplianceModal;
+
   // Hinglish Voice Agent Controls
   $('btnVoiceSpeak').onclick = playVoiceDialogue;
   $('btnVoiceStop').onclick = stopVoiceDialogue;
@@ -171,7 +178,6 @@ function updateMetrics() {
   const rate = totalEligible ? Math.round((totalRecovered / totalEligible) * 100) : 0;
   $('kpiRate').textContent = `${rate}%`;
 
-  // Dynamic DSO estimate: each confirmed recovery saves ~1.8 days of receivables aging
   const dsoSaved = (done.length * 1.8 + 4.2).toFixed(1);
   $('kpiDSO').textContent = done.length ? `-${dsoSaved}d` : '-4.2d';
 
@@ -217,7 +223,7 @@ function renderQueue() {
   $('queueCountBadge').textContent = `${filtered.length} signals`;
 
   if (!filtered.length) {
-    $('caseList').innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 13px;">No signals match your filter criteria.</div>`;
+    $('caseList').innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 12px;">No signals match your filter criteria.</div>`;
     return;
   }
 
@@ -228,13 +234,13 @@ function renderQueue() {
 
     if (c.done) {
       statusPillClass = 'status-voice';
-      statusText = 'RECOVERED ✓';
+      statusText = 'RECOVERED';
     } else if (c.outcome === 'stopped') {
       statusPillClass = 'status-stopped';
-      statusText = 'STOPPED 🛑';
+      statusText = 'SUPPRESSED';
     } else if (c.batchAttempted) {
       statusPillClass = 'status-abandoned';
-      statusText = 'INTERVENTION SENT';
+      statusText = 'ACTION SENT';
     } else if (c.ptpData && c.ptpData.status === 'active_snooze') {
       statusPillClass = 'status-ptp';
       statusText = 'PTP SNOOZED';
@@ -250,8 +256,8 @@ function renderQueue() {
           <span class="status-pill ${statusPillClass}">${statusText}</span>
         </div>
         <div class="case-meta-row">
-          <span class="case-signal">⚡ ${escapeHtml(c.signal)}</span>
-          <span class="case-error-tag">${escapeHtml(c.errorCode || 'UNKNOWN_ERR')}</span>
+          <span class="case-signal">${escapeHtml(c.signal)}</span>
+          <span class="case-error-tag">${escapeHtml(c.errorCode || 'ERR')}</span>
         </div>
         <div class="case-action-preview">
           ${escapeHtml(c.action)}
@@ -260,7 +266,6 @@ function renderQueue() {
     `;
   }).join('');
 
-  // Attach click listeners to case items
   document.querySelectorAll('.case-item').forEach(el => {
     el.onclick = () => {
       const caseId = el.dataset.id;
@@ -274,9 +279,9 @@ function renderQueue() {
 function renderInspector() {
   if (!selected) {
     $('inspDirection').textContent = 'Select A Case';
-    $('inspName').textContent = 'Revenue Case Inspector';
+    $('inspName').textContent = 'Case Inspector';
     $('inspAmount').textContent = '₹0';
-    $('inspDiagnosis').textContent = 'Click any case from the signals queue to inspect the autonomous agent decision.';
+    $('inspDiagnosis').textContent = 'Select a case from the queue to inspect root cause diagnosis, compliance guardrail evaluation, and proposed action.';
     $('inspActionText').textContent = 'No action selected.';
     $('inspDraftMsg').textContent = 'Draft template preview will appear here.';
     $('btnExecuteOne').disabled = true;
@@ -288,16 +293,15 @@ function renderInspector() {
 
   const c = selected;
 
-  // Header
   const directionLabels = {
     payment_degradation: '1. PAYMENT DEGRADATION',
     checkout_dropoff: '2. CHECKOUT DROP-OFF',
     subscription_recovery: '3. FAILED SUBSCRIPTION',
-    b2b_receivables: '4. B2B RECEIVABLES CHASER',
+    b2b_receivables: '4. B2B RECEIVABLES',
     mandate_sequencer: '5. MANDATE RETRY SEQUENCER',
     hinglish_voice: '6. HINGLISH VOICE RECOVERY',
-    promise_to_pay: '7. PROMISE-TO-PAY (PTP)',
-    compliance_stop: 'REGULATORY COMPLIANCE STOP'
+    promise_to_pay: '7. PROMISE TO PAY (PTP)',
+    compliance_stop: 'COMPLIANCE SUPPRESSION'
   };
 
   $('inspDirection').textContent = directionLabels[c.direction] || (c.direction || 'RECOVERY SIGNAL').toUpperCase();
@@ -309,12 +313,12 @@ function renderInspector() {
   // AI Diagnostics
   $('inspDiagnosis').innerHTML = `
     <strong>Diagnosis:</strong> ${escapeHtml(c.diagnosis)}<br/>
-    <div style="margin-top:6px; font-size:12px; color:var(--text-sub);">
+    <div style="margin-top:5px; font-size:11px; color:var(--text-muted);">
       <b>Root Cause Factor:</b> ${escapeHtml(c.notes || 'Identified via transaction error event stream.')}
     </div>
   `;
   $('inspErrorCode').textContent = `Code: ${c.errorCode || 'ERR_REVENUE_RISK'}`;
-  $('inspConfidence').textContent = `Recovery Confidence: ${c.outcome === 'stopped' ? '0% (Suppressed)' : '94.8%'}`;
+  $('inspConfidence').textContent = `Confidence: ${c.outcome === 'stopped' ? '0% (Suppressed)' : '94.8%'}`;
 
   // Compliance Checks
   const hasConsent = /consent: yes/i.test(c.channel);
@@ -324,50 +328,47 @@ function renderInspector() {
 
   $('inspComplianceGrid').innerHTML = `
     <div class="compliance-check">
-      <span class="check-icon ${hasConsent ? 'pass' : 'fail'}">${hasConsent ? '✓' : '✗'}</span>
+      <span class="check-icon ${hasConsent ? 'pass' : 'fail'}">&bull;</span>
       Channel Consent: ${hasConsent ? 'Verified' : 'Missing'}
     </div>
     <div class="compliance-check">
-      <span class="check-icon ${withinCap ? 'pass' : 'fail'}">${withinCap ? '✓' : '✗'}</span>
+      <span class="check-icon ${withinCap ? 'pass' : 'fail'}">&bull;</span>
       Frequency Cap: ${c.attempts || 0}/2 Used
     </div>
     <div class="compliance-check">
-      <span class="check-icon pass">✓</span>
-      Calling Window: 9am-7pm IST
+      <span class="check-icon pass">&bull;</span>
+      Calling Hours: 9am-7pm IST
     </div>
     <div class="compliance-check">
-      <span class="check-icon ${hasDispute ? 'fail' : 'pass'}">${hasDispute ? '✗' : '✓'}</span>
+      <span class="check-icon ${hasDispute ? 'fail' : 'pass'}">&bull;</span>
       Dispute Lock: ${hasDispute ? 'Active Dispute' : 'Clean'}
     </div>
   `;
 
-  // Action & Draft
   $('inspChannelBadge').textContent = (c.channel || 'WHATSAPP').toUpperCase();
   $('inspActionText').textContent = c.action;
 
-  // Generate compliant draft preview
   let draft = '';
   if (c.kind === 'failed' || c.direction === 'payment_degradation') {
-    draft = `Hi ${c.name.split(' ')[0]}, your recent payment of ${money(c.amount)} could not be confirmed due to a temporary bank timeout. Click here to safely complete it: https://rzp.io/i/${c.id}`;
+    draft = `Hi ${c.name.split(' ')[0]}, your payment of ${money(c.amount)} timed out at the issuer bank switch. Use this 20-minute fallback link to complete it: https://rzp.io/i/${c.id}`;
   } else if (c.kind === 'abandoned' || c.direction === 'checkout_dropoff') {
-    draft = `Hi ${c.name.split(' ')[0]}, your cart items have been reserved for the next 2 hours. Tap here to review your basket: https://trustcart.demo/restore?cart=${c.id}`;
+    draft = `Hi ${c.name.split(' ')[0]}, items in your cart are reserved for 2 hours. Review and restore your checkout here: https://trustcart.demo/restore?cart=${c.id}`;
   } else if (c.direction === 'subscription_recovery') {
-    draft = `Notice: Your subscription mandate of ${money(c.amount)} experienced an auto-debit decline due to an expired card token. Update your payment method here: https://rzp.io/m/${c.id}`;
+    draft = `Notice: Recurring mandate for ${money(c.amount)} declined due to an expired card token. Update your payment method: https://rzp.io/m/${c.id}`;
   } else if (c.direction === 'b2b_receivables') {
-    draft = `Dear Accounts Team at ${c.name}, Invoice #${c.id} (${money(c.amount)}) has crossed the credit grace window. View official GST invoice and pay via Razorpay: https://invoice.rzp.io/inv/${c.id}`;
+    draft = `Accounts Payable, ${c.name}: Invoice #${c.id} (${money(c.amount)}) is past credit terms. View GST invoice and settlement options: https://invoice.rzp.io/inv/${c.id}`;
   } else if (c.direction === 'hinglish_voice') {
-    draft = `[VOICE SCRIPT] "Namaste ${c.name.split(' ')[0]} ji! Main support se bol raha hoon... aapka payment unconfirmed tha ${money(c.amount)} ka."`;
+    draft = `[VOICE SCRIPT] "Namaste ${c.name.split(' ')[0]} ji, main support se baat kar raha hoon... aapka payment unconfirmed tha ${money(c.amount)} ka."`;
   } else {
-    draft = `Payment reminder: ${money(c.amount)} is pending confirmation. Pay securely via Razorpay: https://rzp.io/i/${c.id}`;
+    draft = `Payment reminder: ${money(c.amount)} pending confirmation. Pay securely via Razorpay: https://rzp.io/i/${c.id}`;
   }
   $('inspDraftMsg').textContent = draft;
 
-  // Widgets display
   // 1. Voice Widget
   if (c.direction === 'hinglish_voice' || c.kind === 'voice') {
     $('voiceWidget').style.display = 'block';
     if (c.voiceScript) {
-      $('voiceDialogueBox').innerHTML = `<p style="color: #cbd5e1; font-style: italic;">"${escapeHtml(c.voiceScript.opening)}"</p>`;
+      $('voiceDialogueBox').innerHTML = `<p style="color: var(--text-sub); font-style: italic;">"${escapeHtml(c.voiceScript.opening)}"</p>`;
     }
   } else {
     $('voiceWidget').style.display = 'none';
@@ -396,13 +397,13 @@ function renderInspector() {
   $('btnExecuteOne').disabled = isBlocked;
 
   if (c.done) {
-    $('btnExecuteOne').innerHTML = 'Revenue Confirmed Recovered ✓';
+    $('btnExecuteOne').textContent = 'Revenue Confirmed Recovered';
   } else if (c.batchAttempted) {
-    $('btnExecuteOne').innerHTML = 'Intervention Already Sent (Batch Cap)';
+    $('btnExecuteOne').textContent = 'Intervention Already Sent';
   } else if (isStopped) {
-    $('btnExecuteOne').innerHTML = `Blocked: ${escapeHtml(c.stopReason || 'Safety Rule')}`;
+    $('btnExecuteOne').textContent = `Blocked: ${c.stopReason || 'Safety Rule'}`;
   } else {
-    $('btnExecuteOne').innerHTML = `Execute Bounded Intervention <span>→</span>`;
+    $('btnExecuteOne').textContent = 'Execute Approved Intervention';
   }
 }
 
@@ -414,7 +415,7 @@ function renderAudit() {
   }
 
   if (!filtered.length) {
-    $('auditGrid').innerHTML = `<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">No events match the selected filter.</div>`;
+    $('auditGrid').innerHTML = `<div style="grid-column: 1/-1; padding: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">No events match the selected filter.</div>`;
     return;
   }
 
@@ -462,7 +463,7 @@ async function ensureApproval() {
 
     approvalId = data.approvalId;
     $('batchApprovalStatus').textContent = `Approved (${approvalId.slice(0, 8)})`;
-    $('batchApprovalStatus').style.background = '#dcfce7';
+    $('batchApprovalStatus').style.background = '#f0fdf4';
     $('batchApprovalStatus').style.color = '#166534';
 
     showToast(`Operator approval captured for ${data.caseIds.length} cases.`);
@@ -541,7 +542,7 @@ async function handleConfirmPayments() {
 
       if (offlineDemo) {
         c.done = true;
-        recordAudit('payment_confirmed', `Confirmed receipt: ${money(c.amount)} recovered from event ${eventId}!`, c.id);
+        recordAudit('payment_confirmed', `Confirmed receipt: ${money(c.amount)} recovered from event ${eventId}`, c.id);
       } else {
         const res = await fetch('/api/recovery/confirm-payment', {
           method: 'POST',
@@ -560,7 +561,7 @@ async function handleConfirmPayments() {
 
   await refreshAudit();
   renderAll();
-  showToast('Verified bank confirmations processed. Money recovered!');
+  showToast('Verified bank confirmations processed. Money recovered.');
 }
 
 async function handleResetDemo() {
@@ -604,7 +605,6 @@ function playVoiceDialogue() {
     currentUtterance.rate = 0.95;
     currentUtterance.pitch = 1.0;
 
-    // Pick Hindi or English voice if available
     const voices = synth.getVoices();
     const hindiVoice = voices.find(v => v.lang.includes('hi') || v.lang.includes('IN'));
     if (hindiVoice) currentUtterance.voice = hindiVoice;
@@ -637,7 +637,7 @@ async function simulateVoiceReply(userReply) {
   if (!selected) return;
 
   const dialogueBox = $('voiceDialogueBox');
-  dialogueBox.innerHTML += `<p style="color:#fde68a; margin-top:8px;"><b>Customer:</b> "${escapeHtml(userReply)}"</p>`;
+  dialogueBox.innerHTML += `<p style="color:var(--text-main); margin-top:8px;"><b>Customer:</b> "${escapeHtml(userReply)}"</p>`;
   dialogueBox.scrollTop = dialogueBox.scrollHeight;
 
   try {
@@ -656,10 +656,9 @@ async function simulateVoiceReply(userReply) {
       data = await res.json();
     }
 
-    dialogueBox.innerHTML += `<p style="color:#86efac; margin-top:8px;"><b>AI Agent:</b> "${escapeHtml(data.agentResponse)}"</p>`;
+    dialogueBox.innerHTML += `<p style="color:var(--rec-green); margin-top:8px;"><b>AI Agent:</b> "${escapeHtml(data.agentResponse)}"</p>`;
     dialogueBox.scrollTop = dialogueBox.scrollHeight;
 
-    // Speak AI response
     if ('speechSynthesis' in window) {
       synth.cancel();
       const utt = new SpeechSynthesisUtterance(data.agentResponse);
@@ -667,7 +666,6 @@ async function simulateVoiceReply(userReply) {
       synth.speak(utt);
     }
 
-    // Adapt case based on objection
     if (data.recommendedAction === 'record_ptp') {
       await recordPtpForCase(selected, '2026-09-08', 'Customer verbally requested extension until upcoming Friday salary.');
     } else if (data.recommendedAction === 'apply_dnc_stop') {
@@ -694,7 +692,7 @@ async function handleRescheduleMandate() {
       body: JSON.stringify({
         caseId: selected.id,
         targetDate: '2026-09-02T10:30:00Z',
-        reason: 'Re-sequenced to Salary Credit window + Bank Clearing Liquidity Spike (10:30 AM).'
+        reason: 'Re-sequenced to salary credit window + bank clearing liquidity window (10:30 AM).'
       })
     });
     const data = await res.json();
@@ -727,12 +725,12 @@ async function recordPtpForCase(c, date, note) {
     const data = await res.json();
     if (data.success) {
       c.ptpData = data.recoveryCase.ptpData;
-      showToast(`Promise-to-Pay recorded for ${date}. Reminders snoozed.`);
+      showToast(`Promise to Pay recorded for ${date}. Reminders snoozed.`);
       await refreshAudit();
       renderAll();
     }
   } catch (err) {
-    showToast('Failed to record Promise-to-Pay.');
+    showToast('Failed to record Promise to Pay.');
   }
 }
 
@@ -773,12 +771,55 @@ async function handleInjectSignal(e) {
     selected = data.recoveryCase;
     closeModal();
     $('injectForm').reset();
-    showToast(`Signal injected for ${data.recoveryCase.name}! Diagnosed by AI.`);
+    showToast(`Signal injected for ${data.recoveryCase.name}.`);
     await refreshAudit();
     renderAll();
   } catch (err) {
     showToast(`Failed to inject signal: ${err.message}`);
   }
+}
+
+// --- COMPLIANCE MODAL (TOS, PRIVACY, RBI FAIR PRACTICES) ---
+
+function openComplianceModal(type) {
+  const modal = $('complianceModal');
+  const title = $('complianceModalTitle');
+  const body = $('complianceModalBody');
+
+  if (type === 'rbi') {
+    title.textContent = 'RBI Fair Practice Code Disclosure';
+    body.innerHTML = `
+      <p><b>1. Calling Hours Policy:</b> Under the Reserve Bank of India (RBI) Fair Practices Code for recovery and debt servicing, automated and agent-driven voice outreach is strictly restricted to between 09:00 AM and 07:00 PM IST. RecoverFlow enforces this time window programmatically.</p>
+      <br/>
+      <p><b>2. Non-Coercive Communication:</b> Reminders and recovery notices must never employ threatening, abusive, or misleading language. All automated templates are pre-approved, neutral, and transparent regarding debt origin.</p>
+      <br/>
+      <p><b>3. Customer Privacy & Discretion:</b> Recovery communications are addressed only to the verified account holder on registered contact channels with explicit consent.</p>
+    `;
+  } else if (type === 'tos') {
+    title.textContent = 'Terms of Service';
+    body.innerHTML = `
+      <p><b>1. Platform Scope:</b> RecoverFlow operates as a decision-support and workflow automation engine for merchant payment recovery. Interventions are executed only under explicit operator approval or bounded merchant policy rules.</p>
+      <br/>
+      <p><b>2. Idempotency & Financial Accuracy:</b> Revenue recovery calculations are certified strictly against immutable bank settlement events. Simulated or unverified transactions are never recognized as confirmed revenue.</p>
+      <br/>
+      <p><b>3. Operator Accountability:</b> Operators retain manual override authority over any automated recovery action, retry schedule, or customer suppression rule.</p>
+    `;
+  } else {
+    title.textContent = 'Privacy & Do Not Contact (DNC) Policy';
+    body.innerHTML = `
+      <p><b>1. DNC Hard Suppression:</b> Customers who register an opt-out preference or are listed on the national Do Not Call registry are permanently excluded from automated marketing and recovery outreach.</p>
+      <br/>
+      <p><b>2. Contact Frequency Caps:</b> The platform strictly limits outreach to a maximum of 1 attempt per batch run, and no more than 2 touches within any rolling 72-hour window.</p>
+      <br/>
+      <p><b>3. Dispute Protection:</b> If an account holder flags an active billing or commercial dispute, automated dunning is immediately frozen pending manual review.</p>
+    `;
+  }
+
+  modal.classList.add('open');
+}
+
+function closeComplianceModal() {
+  $('complianceModal').classList.remove('open');
 }
 
 // --- EXPORT & AUDIT HELPERS ---
@@ -823,8 +864,7 @@ function showToast(msg) {
   const toast = $('toast');
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Boot application
 window.addEventListener('DOMContentLoaded', init);

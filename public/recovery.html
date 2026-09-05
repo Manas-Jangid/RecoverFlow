@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="RecoverFlow — Autonomous AI Revenue Recovery & Dunning Intelligence Engine. Detects revenue at risk across payment degradation, abandoned checkouts, failed subscriptions, and B2B receivables." />
-  <title>RecoverFlow — Autonomous AI Revenue Recovery Engine</title>
+  <meta name="description" content="RecoverFlow: Autonomous revenue recovery engine detecting payment degradation, abandoned checkouts, failed subscriptions, and overdue receivables with strict stopping rules." />
+  <title>RecoverFlow: Revenue Recovery Engine</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="recovery.css" />
 </head>
@@ -15,62 +15,62 @@
       <div class="brand-wrapper">
         <div class="brand-logo">RF</div>
         <div class="brand-info">
-          <h1>RecoverFlow <span style="font-size: 13px; color: var(--rzp-blue); font-weight: 600;">v1.0</span></h1>
-          <p>Autonomous AI Revenue Recovery &amp; Dunning Intelligence Engine</p>
+          <h1>RecoverFlow <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">v1.0</span></h1>
+          <p>Revenue Recovery and Dunning Intelligence Platform</p>
         </div>
       </div>
       <div class="header-badges">
-        <span class="badge-pill badge-hackathon">RAZORPAY AI HACKATHON</span>
-        <span class="badge-pill badge-mode" id="apiModeBadge">SIMULATED SANDBOX</span>
-        <a href="/commerce.html" class="nav-link-companion" title="Test origin of drop-offs and checkout orders">Origin Storefront ↗</a>
+        <span class="badge-pill badge-hackathon">Razorpay AI Hackathon</span>
+        <span class="badge-pill badge-mode" id="apiModeBadge">Simulated Sandbox</span>
+        <a href="/commerce.html" class="nav-link-companion" title="Storefront simulation to trigger abandoned carts">Storefront Demo &rarr;</a>
       </div>
     </header>
 
-    <!-- Executive KPI Scoreboard (The Bar: Measured Money Recovered) -->
+    <!-- Executive KPI Scoreboard (Clean, no emojis, no left stripe) -->
     <section class="kpi-grid">
       <article class="kpi-card kpi-risk">
-        <span class="kpi-label">Revenue at Risk <span>⚠️</span></span>
+        <span class="kpi-label">Revenue at Risk <span class="kpi-tag">Active</span></span>
         <div class="kpi-value" id="kpiAtRisk">₹0</div>
         <small class="kpi-sub">Across <b id="kpiRiskCases">0</b> active pipeline cases</small>
       </article>
       <article class="kpi-card kpi-recovered">
-        <span class="kpi-label">Confirmed Recovered <span>✓</span></span>
+        <span class="kpi-label">Confirmed Recovered <span class="kpi-tag">Verified</span></span>
         <div class="kpi-value" id="kpiRecovered">₹0</div>
-        <small class="kpi-sub">Verified bank payment receipts only</small>
+        <small class="kpi-sub">Idempotent bank receipts only</small>
       </article>
       <article class="kpi-card kpi-protected">
-        <span class="kpi-label">Protected by Guardrails <span>🛡️</span></span>
+        <span class="kpi-label">Protected by Guardrails <span class="kpi-tag">Suppressed</span></span>
         <div class="kpi-value" id="kpiProtected">₹0</div>
-        <small class="kpi-sub">Saved from non-compliant harassment</small>
+        <small class="kpi-sub">DNC, dispute, and frequency caps</small>
       </article>
       <article class="kpi-card kpi-rate">
-        <span class="kpi-label">Recovery Rate <span>📈</span></span>
+        <span class="kpi-label">Recovery Rate <span class="kpi-tag">Batch</span></span>
         <div class="kpi-value" id="kpiRate">0%</div>
-        <small class="kpi-sub">Of eligible recoverable batch value</small>
+        <small class="kpi-sub">Of eligible recoverable value</small>
       </article>
       <article class="kpi-card kpi-dso">
-        <span class="kpi-label">DSO Reduction <span>⏱️</span></span>
+        <span class="kpi-label">DSO Reduction <span class="kpi-tag">Estimate</span></span>
         <div class="kpi-value" id="kpiDSO">-8.4d</div>
-        <small class="kpi-sub">Average days sales outstanding saved</small>
+        <small class="kpi-sub">Receivables aging reduction</small>
       </article>
     </section>
 
-    <!-- 7 Hackathon Track Directions Showcase & Filter Ribbon -->
+    <!-- 7 Hackathon Track Directions Showcase & Filter Ribbon (No emoji clutter) -->
     <section class="directions-ribbon">
       <div class="ribbon-header">
-        <h3>Challenge Track Directions (7 Pillars)</h3>
-        <span style="font-size: 11px; color: var(--text-muted);">Click to filter pipeline by specific recovery direction</span>
+        <h3>Recovery Pipelines</h3>
+        <span style="font-size: 11px; color: var(--text-muted);">Filter queue by recovery direction</span>
       </div>
       <div class="ribbon-pills">
-        <button class="dir-pill active" data-direction="all">✦ All Pipeline Signals (<span id="countAll">0</span>)</button>
-        <button class="dir-pill" data-direction="payment_degradation">⚡ 1. Payment Degradation</button>
-        <button class="dir-pill" data-direction="checkout_dropoff">🛒 2. Checkout Drop-Offs</button>
-        <button class="dir-pill" data-direction="subscription_recovery">🔄 3. Failed Subscriptions</button>
-        <button class="dir-pill" data-direction="b2b_receivables">🏢 4. B2B Receivables</button>
-        <button class="dir-pill" data-direction="mandate_sequencer">📅 5. Mandate Sequencer</button>
-        <button class="dir-pill" data-direction="hinglish_voice">🎙️ 6. Hinglish Voice Recovery</button>
-        <button class="dir-pill" data-direction="promise_to_pay">🤝 7. Promise-to-Pay (PTP)</button>
-        <button class="dir-pill" data-direction="compliance_stop">🛑 Compliance &amp; Stop Rules</button>
+        <button class="dir-pill active" data-direction="all">All Signals (<span id="countAll">0</span>)</button>
+        <button class="dir-pill" data-direction="payment_degradation">1. Payment Degradation</button>
+        <button class="dir-pill" data-direction="checkout_dropoff">2. Checkout Drop-Offs</button>
+        <button class="dir-pill" data-direction="subscription_recovery">3. Failed Subscriptions</button>
+        <button class="dir-pill" data-direction="b2b_receivables">4. B2B Receivables</button>
+        <button class="dir-pill" data-direction="mandate_sequencer">5. Mandate Sequencer</button>
+        <button class="dir-pill" data-direction="hinglish_voice">6. Hinglish Voice Recovery</button>
+        <button class="dir-pill" data-direction="promise_to_pay">7. Promise to Pay</button>
+        <button class="dir-pill" data-direction="compliance_stop">Compliance Stops</button>
       </div>
     </section>
 
@@ -78,24 +78,24 @@
     <section class="action-bar">
       <div class="action-bar-left">
         <button id="btnRunBatch" class="btn-primary" title="Execute bounded next-best recovery actions for all eligible cases">
-          ⚡ Run Approved Batch <span style="opacity: 0.8; font-size: 11px;">(Scoped Operator Approval)</span>
+          Run Approved Batch <span style="opacity: 0.7; font-size: 11px;">(Scoped Approval)</span>
         </button>
-        <button id="btnConfirmPayments" class="btn-secondary" disabled title="Process verified bank payment confirmations idempotently">
-          💳 Process Payment Confirmations
+        <button id="btnConfirmPayments" class="btn-secondary" disabled title="Process verified bank settlement receipts">
+          Process Confirmations
         </button>
-        <button id="btnInjectSignal" class="btn-secondary btn-inject" title="Simulate an incoming webhook signal live">
-          ➕ Inject Signal Webhook
+        <button id="btnInjectSignal" class="btn-secondary" title="Simulate an incoming failure webhook">
+          Inject Webhook Signal
         </button>
       </div>
       <div class="action-bar-right">
-        <button id="btnExportAuditJson" class="btn-secondary" title="Export tamper-evident JSON audit trail">
-          📑 Export JSON
+        <button id="btnExportAuditJson" class="btn-secondary" title="Export audit trail in JSON format">
+          Export JSON
         </button>
         <button id="btnExportAuditCsv" class="btn-secondary" title="Export audit trail in CSV format">
-          📊 Export CSV
+          Export CSV
         </button>
         <button id="btnResetDemo" class="btn-secondary" title="Reset all pipeline cases to baseline state">
-          🔄 Reset Demo
+          Reset Pipeline
         </button>
       </div>
     </section>
@@ -106,19 +106,19 @@
       <section class="panel queue-panel">
         <div class="panel-header">
           <div>
-            <h2>Signals Queue <span id="queueCountBadge" class="badge-pill" style="background:#e0f2fe; color:#0369a1; font-size:11px;">0 active</span></h2>
-            <span class="panel-sub">Real-time revenue risk detection across retail, subscriptions &amp; B2B</span>
+            <h2>Signals Queue <span id="queueCountBadge" class="badge-pill" style="background:#f1f5f9; color:#334155; font-size:11px;">0 active</span></h2>
+            <span class="panel-sub">Real-time risk signals across retail, subscriptions, and invoices</span>
           </div>
           <span id="batchApprovalStatus" class="badge-pill" style="background:#f1f5f9; color:#475569;">Awaiting Approval</span>
         </div>
 
         <div class="queue-filter-bar">
           <div class="filter-group">
-            <button class="filter-btn active" data-status-filter="all">All Cases</button>
+            <button class="filter-btn active" data-status-filter="all">All</button>
             <button class="filter-btn" data-status-filter="recoverable">Recoverable</button>
-            <button class="filter-btn" data-status-filter="sent">Intervention Sent</button>
-            <button class="filter-btn" data-status-filter="confirmed">Recovered ✓</button>
-            <button class="filter-btn" data-status-filter="stopped">Stopped 🛑</button>
+            <button class="filter-btn" data-status-filter="sent">Action Sent</button>
+            <button class="filter-btn" data-status-filter="confirmed">Recovered</button>
+            <button class="filter-btn" data-status-filter="stopped">Suppressed</button>
           </div>
           <input type="text" id="queueSearch" class="search-input" placeholder="Search customer, ID, error..." />
         </div>
@@ -132,76 +132,76 @@
       <aside class="panel decision-studio">
         <div class="case-inspector-header">
           <div class="inspector-eyebrow" id="inspDirection">Select A Case</div>
-          <h2 class="inspector-title" id="inspName">Revenue Case Inspector</h2>
+          <h2 class="inspector-title" id="inspName">Case Inspector</h2>
           <div class="inspector-meta">
-            <span id="inspAmount" style="font-family:'DM Mono'; font-weight:700;">₹0</span>
+            <span id="inspAmount" style="font-family:'DM Mono'; font-weight:600;">₹0</span>
             <span id="inspUrgency">Priority: Normal</span>
             <span id="inspAttempts">Attempts: 0/2</span>
           </div>
         </div>
 
-        <!-- AI Diagnostics Box -->
+        <!-- AI Diagnostics Box (No left stripe) -->
         <div class="studio-section">
           <div class="studio-section-title">
-            <span>🧠 AI Diagnosis &amp; Root Cause Analysis</span>
+            Root Cause Diagnosis
           </div>
           <div class="diagnosis-box" id="inspDiagnosis">
-            Click any case from the signals queue to inspect the autonomous agent's explainable diagnosis, root-cause classification, regulatory guardrails, and prescribed bounded action.
+            Select a case from the queue to inspect root cause diagnosis, compliance guardrail evaluation, and proposed action.
           </div>
           <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span id="inspErrorCode">Code: NONE</span>
-            <span id="inspConfidence">Confidence: 96.4%</span>
+            <span id="inspErrorCode">Code: None</span>
+            <span id="inspConfidence">Confidence: 94.8%</span>
           </div>
         </div>
 
         <!-- Compliance & Regulatory Guardrails Engine -->
         <div class="studio-section">
           <div class="studio-section-title">
-            <span>🛡️ Regulatory Compliance &amp; Stop Rules</span>
+            Compliance and Stopping Rules
           </div>
           <div class="compliance-grid" id="inspComplianceGrid">
-            <div class="compliance-check"><span class="check-icon pass">✓</span> Channel Consent: Verified</div>
-            <div class="compliance-check"><span class="check-icon pass">✓</span> Frequency Cap: &lt;2 touches</div>
-            <div class="compliance-check"><span class="check-icon pass">✓</span> RBI Calling Hours: 9am-7pm</div>
-            <div class="compliance-check"><span class="check-icon pass">✓</span> Dispute Check: No Dispute</div>
+            <div class="compliance-check"><span class="check-icon pass">&bull;</span> Channel Consent: Verified</div>
+            <div class="compliance-check"><span class="check-icon pass">&bull;</span> Frequency Cap: &lt;2 touches</div>
+            <div class="compliance-check"><span class="check-icon pass">&bull;</span> Calling Hours: 9am-7pm</div>
+            <div class="compliance-check"><span class="check-icon pass">&bull;</span> Dispute Check: No Dispute</div>
           </div>
         </div>
 
-        <!-- Proposed Intervention & Action Preview -->
+        <!-- Proposed Intervention Preview -->
         <div class="studio-section">
           <div class="studio-section-title">
-            <span>⚡ Proposed Bounded Next Action</span>
+            Proposed Action
           </div>
           <div class="channel-preview">
-            <span class="channel-preview-badge" id="inspChannelBadge">WHATSAPP · BOUNDED TEMPLATE</span>
+            <span class="channel-preview-badge" id="inspChannelBadge">WhatsApp Template</span>
             <p id="inspActionText" style="color: var(--text-main); font-weight: 500;">
               No action selected.
             </p>
-            <div id="inspDraftMsg" style="margin-top: 8px; padding: 8px; background: #f1f5f9; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 11px; color: #334155; white-space: pre-wrap;">Draft template preview will appear here.</div>
+            <div id="inspDraftMsg" style="margin-top: 8px; padding: 8px; background: #f8fafc; border: 1px solid var(--border); border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 11px; color: #334155; white-space: pre-wrap;">Draft template preview will appear here.</div>
           </div>
         </div>
 
-        <!-- Direction 6: Interactive Hinglish Voice Recovery Simulator -->
+        <!-- Direction 6: Interactive Hinglish Voice Recovery Widget (No harsh gradients or pulsing orbs) -->
         <div class="voice-agent-box" id="voiceWidget" style="display: none;">
           <div class="voice-header">
             <div class="voice-status">
-              <span class="voice-pulse"></span> HINGLISH VOICE AGENT READY
+              <span class="voice-pulse"></span> Voice Agent Ready
             </div>
-            <span style="font-size: 10px; font-family:'DM Mono'; opacity: 0.8;">Bilingual AI Audio</span>
+            <span style="font-size: 11px; font-family:'DM Mono'; color: var(--text-muted);">Bilingual Hinglish</span>
           </div>
           <div class="voice-script-box" id="voiceDialogueBox">
-            <p style="color: #cbd5e1; font-style: italic;">"Namaste Priya ji! Main EduVantage support se bol raha hoon. Aapki course EMI ka payment unconfirmed tha ₹3,750 ka. Kya abhi 1 minute baat ho sakti hai?"</p>
+            <p style="color: var(--text-sub); font-style: italic;">"Namaste Priya ji! Main EduVantage support se bol raha hoon. Aapki course EMI ka payment unconfirmed tha ₹3,750 ka. Kya abhi 1 minute baat ho sakti hai?"</p>
           </div>
           <div class="voice-controls">
             <button id="btnVoiceSpeak" class="btn-voice-play">
-              🔊 Play Voice Dialogue (Hinglish)
+              Play Voice Dialogue
             </button>
             <button id="btnVoiceStop" class="btn-secondary" style="font-size: 11px; padding: 6px 10px; display: none;">
-              ⏹ Stop
+              Stop
             </button>
           </div>
-          <div style="margin-top: 10px; font-size: 11px; color: #94a3b8;">
-            Simulate Customer Objection:
+          <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
+            Test Customer Objection:
           </div>
           <div class="voice-quick-replies">
             <button class="reply-chip" data-reply="Bhaiya salary 5 tarikh ko aayegi, tab pay kar dungi">"Salary 5 ko aayegi" (PTP)</button>
@@ -213,32 +213,32 @@
 
         <!-- Direction 5: Mandate Sequencer Widget -->
         <div class="mandate-widget" id="mandateWidget" style="display: none;">
-          <div style="font-size: 12px; font-weight: 700; color: #9a3412; display: flex; justify-content: space-between;">
-            <span>📅 SMART MANDATE RETRY SEQUENCER</span>
-            <span style="font-family:'DM Mono'; font-size:11px;">Confidence: 94.2%</span>
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-main); display: flex; justify-content: space-between;">
+            <span>Mandate Retry Sequencer</span>
+            <span style="font-family:'DM Mono'; font-size:11px; color: var(--text-muted);">Confidence: 94.2%</span>
           </div>
-          <p style="font-size: 12px; color: #7c2d12;" id="mandateScheduleText">
-            Auto-rescheduling debit from month-end squeeze to 1st of month at 10:15 AM to match salary clearing.
+          <p style="font-size: 12px; color: var(--text-sub);" id="mandateScheduleText">
+            Rescheduling debit execution to 1st of month at 10:15 AM to align with customer salary credit.
           </p>
           <div style="display: flex; gap: 8px;">
-            <button id="btnRescheduleMandate" class="btn-secondary" style="font-size: 11px; padding: 6px 10px; border-color: #fdba74;">
-              🔄 Re-sequence Clearing Window
+            <button id="btnRescheduleMandate" class="btn-secondary" style="font-size: 11px; padding: 5px 9px;">
+              Re-sequence Retry Window
             </button>
           </div>
         </div>
 
-        <!-- Direction 7: Promise-to-Pay (PTP) Widget -->
+        <!-- Direction 7: Promise-to-Pay Widget -->
         <div class="ptp-widget" id="ptpWidget" style="display: none;">
           <div class="ptp-row">
-            <strong style="color: #166534;">🤝 PROMISE-TO-PAY (PTP) TRACKER</strong>
-            <span id="ptpBadge" class="badge-pill" style="background:#dcfce7; color:#166534;">Active Commitment</span>
+            <strong>Promise to Pay (PTP)</strong>
+            <span id="ptpBadge" class="badge-pill" style="background:#f0fdf4; color:#166534; border: 1px solid #bbf7d0;">Active</span>
           </div>
-          <p style="font-size: 12px; color: #166534;" id="ptpDetailText">
-            Customer committed to clear payment on Sept 5. Dunning is auto-snoozed.
+          <p style="font-size: 12px; color: var(--text-sub);" id="ptpDetailText">
+            Customer committed to clear payment on Sept 5. Dunning reminders auto-snoozed.
           </p>
           <div style="display:flex; gap:8px;">
-            <button id="btnUpdatePtp" class="btn-secondary" style="font-size:11px; padding:6px 10px; border-color:#86efac;">
-              ✏️ Update Commitment Date
+            <button id="btnUpdatePtp" class="btn-secondary" style="font-size:11px; padding:5px 9px;">
+              Update Commitment Date
             </button>
           </div>
         </div>
@@ -246,23 +246,23 @@
         <!-- Execution Gate -->
         <div class="decision-actions">
           <button id="btnExecuteOne" class="btn-execute-one" disabled>
-            Execute Approved Intervention <span>→</span>
+            Execute Approved Intervention
           </button>
         </div>
       </aside>
     </main>
 
-    <!-- Full-Width Tamper-Evident Audit Ledger -->
+    <!-- Tamper-Evident Audit Ledger (No colored left stripes) -->
     <section class="audit-wrap">
       <div class="audit-heading">
         <div>
-          <h2>Auditable Recovery Ledger &amp; Event Stream</h2>
-          <p style="font-size: 12px; color: var(--text-muted);">Cryptographic sequence of assessments, operator approvals, bounded actions, stops, and confirmed payments</p>
+          <h2>Auditable Recovery Ledger</h2>
+          <p style="font-size: 12px; color: var(--text-muted);">Log of diagnoses, operator approvals, bounded actions, stops, and confirmed payments</p>
         </div>
         <div class="audit-controls">
           <button class="filter-btn active" data-audit-filter="all">All Events</button>
-          <button class="filter-btn" data-audit-filter="payment_confirmed">Confirmed (₹)</button>
-          <button class="filter-btn" data-audit-filter="action_blocked">Stops / Blocks</button>
+          <button class="filter-btn" data-audit-filter="payment_confirmed">Confirmed</button>
+          <button class="filter-btn" data-audit-filter="action_blocked">Stops</button>
           <button class="filter-btn" data-audit-filter="batch_approved">Approvals</button>
         </div>
       </div>
@@ -271,22 +271,34 @@
         <!-- Dynamically rendered audit events -->
       </div>
     </section>
+
+    <!-- Footer with Real Compliance & Legal Disclosures (Fixes #26, #27) -->
+    <footer class="app-footer">
+      <div>
+        <span>RecoverFlow &copy; 2026. Bounded Dunning &amp; Revenue Recovery.</span>
+      </div>
+      <div class="footer-links">
+        <a class="footer-link" id="btnPolicyModal">RBI Fair Practice Code</a>
+        <a class="footer-link" id="btnTosModal">Terms of Service</a>
+        <a class="footer-link" id="btnPrivacyModal">Privacy &amp; DNC Policy</a>
+      </div>
+    </footer>
   </div>
 
   <!-- Signal Injection Modal -->
   <div id="injectModal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Inject Live Revenue Risk Signal</h3>
+        <h3>Inject Revenue Risk Signal</h3>
         <button id="closeModal" class="modal-close">&times;</button>
       </div>
       <p style="font-size: 12px; color: var(--text-muted);">
-        Simulate an incoming failed payment webhook, cart abandonment, or overdue receivable. The agent will autonomously diagnose the root cause and prescribe bounded next steps.
+        Simulate an incoming failure webhook or cart drop-off. The engine will diagnose the root cause and evaluate compliance rules.
       </p>
       <form id="injectForm">
         <div class="form-row">
           <div class="form-group">
-            <label for="sigCustomer">Customer / Entity Name</label>
+            <label for="sigCustomer">Customer / Account</label>
             <input type="text" id="sigCustomer" class="form-control" required placeholder="e.g. Rahul Verma" />
           </div>
           <div class="form-group">
@@ -300,48 +312,64 @@
             <label for="sigKind">Risk Category</label>
             <select id="sigKind" class="form-control">
               <option value="failed">Failed Payment (UPI / Card)</option>
-              <option value="abandoned">Checkout Drop-Off (Cart Abandonment)</option>
-              <option value="subscription">Failed Subscription / Mandate</option>
+              <option value="abandoned">Checkout Drop-Off</option>
+              <option value="subscription">Failed Subscription Mandate</option>
               <option value="overdue">B2B Overdue Invoice</option>
-              <option value="voice">High-Value Voice Recovery</option>
+              <option value="voice">Voice Recovery Candidate</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="sigErrorCode">Failure Error Code</label>
+            <label for="sigErrorCode">Error Code</label>
             <input type="text" id="sigErrorCode" class="form-control" placeholder="e.g. GATEWAY_TIMEOUT_SBI_UPI" />
           </div>
         </div>
 
         <div class="form-group">
           <label for="sigSignal">Signal Description</label>
-          <input type="text" id="sigSignal" class="form-control" placeholder="e.g. UPI Intent timed out at SBI switch · 4 min ago" />
+          <input type="text" id="sigSignal" class="form-control" placeholder="e.g. UPI Intent timed out at SBI switch" />
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Channel Consent</label>
-            <div style="display:flex; gap:12px; font-size:12px; align-items:center; margin-top:6px;">
-              <label><input type="radio" name="sigConsent" value="yes" checked /> Yes (Approved)</label>
-              <label><input type="radio" name="sigConsent" value="no" /> No Consent</label>
+            <div style="display:flex; gap:12px; font-size:12px; align-items:center; margin-top:4px;">
+              <label><input type="radio" name="sigConsent" value="yes" checked /> Yes</label>
+              <label><input type="radio" name="sigConsent" value="no" /> No</label>
             </div>
           </div>
           <div class="form-group">
             <label>Do Not Contact (DNC)</label>
-            <div style="display:flex; gap:12px; font-size:12px; align-items:center; margin-top:6px;">
+            <div style="display:flex; gap:12px; font-size:12px; align-items:center; margin-top:4px;">
               <label><input type="checkbox" id="sigIsDnc" /> Mark Customer on DNC</label>
             </div>
           </div>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;">
           <button type="button" id="btnCancelModal" class="btn-secondary">Cancel</button>
-          <button type="submit" class="btn-primary">Inject &amp; Run AI Diagnostics</button>
+          <button type="submit" class="btn-primary">Inject and Diagnose</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Compliance Policy Modal (TOS / Privacy / RBI Disclosures) -->
+  <div id="complianceModal" class="modal-overlay">
+    <div class="modal-card" style="max-height: 80vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 id="complianceModalTitle">Regulatory Compliance &amp; Terms</h3>
+        <button id="closeComplianceModal" class="modal-close">&times;</button>
+      </div>
+      <div id="complianceModalBody" style="font-size: 12px; line-height: 1.6; color: var(--text-sub);">
+        <!-- Populated via JS -->
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+        <button type="button" id="btnCloseComplianceBtn" class="btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
   <div id="toast" role="status" aria-live="polite"></div>
 
   <script src="recovery.js"></script>
