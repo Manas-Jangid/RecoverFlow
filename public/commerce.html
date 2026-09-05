@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TrustCart is an explainable agentic commerce demo with buyer approval gates, a Razorpay test-mode checkout, and an audit trail." />
+  <title>TrustCart — agentic checkout</title><link rel="icon" href="favicon.svg" type="image/svg+xml" /><link rel="stylesheet" href="styles.css" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <main>
+    <nav><a class="brand" href="/commerce.html"><span>✦</span> TrustCart</a><div class="nav-right"><a href="/">RecoverFlow Dashboard ↗</a><div class="badge">TEST MODE · BOUNDED AGENT</div></div></nav>
+    <section class="hero"><div><p class="eyebrow">AGENTIC COMMERCE, WITH RECEIPTS</p><h1>A helpful sales agent.<br><em>A careful payment agent.</em></h1><p class="sub">It grows the basket, explains each choice, and will never create a payment without your approval.</p></div><div class="cap"><span>Transaction cap</span><strong>₹1,500</strong><small>Pre-set by merchant</small></div></section>
+    <section class="grid">
+      <section class="panel concierge"><div class="panel-head"><div><p class="eyebrow">SHOP WITH LUMI</p><h2>What are you looking for?</h2></div><span class="online">● Online</span></div>
+        <div id="chat" class="chat"><div class="message agent">Hi, I’m Lumi. Tell me who you’re shopping for, your budget, or choose a starter prompt below.</div></div>
+        <div class="prompts"><button data-prompt="I need a skincare gift under ₹1,500">Gift under ₹1,500</button><button data-prompt="Build me a glow routine">Build a glow routine</button></div>
+        <form id="chatForm"><label class="sr-only" for="message">Ask Lumi about products</label><input id="message" autocomplete="off" placeholder="Ask Lumi anything…" /><button aria-label="Send">↑</button></form>
+      </section>
+      <aside class="panel basket"><div class="panel-head"><div><p class="eyebrow">PROPOSED BASKET</p><h2 id="basketTitle">Awaiting your brief</h2></div><span id="total">₹0</span></div>
+        <div id="items" class="items"><p class="empty">Lumi’s recommendation will appear here.</p></div>
+        <div id="reason" class="reason hidden"></div>
+        <div id="guardrail" class="guardrail">🔒 No charge will be created until you approve the exact total.</div>
+        <button id="approve" class="approve" disabled>Approve &amp; pay <span>→</span></button>
+        <button id="failDemo" class="link">Demo a failed payment</button>
+      </aside>
+    </section>
+    <section class="audit-wrap"><div class="audit-heading"><div><p class="eyebrow">EXPLAINABLE BY DESIGN</p><h2>Decision &amp; payment audit trail</h2></div><button id="reset" class="reset">Reset demo</button></div><div id="audit" class="audit"><div class="audit-empty">Your agent’s decisions will be recorded here — including any failure.</div></div></section>
+  </main>
+  <div id="toast" role="status"></div><script src="app.js"></script>
+</body></html>

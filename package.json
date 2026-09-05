@@ -1,0 +1,20 @@
+{
+  "name": "recoverflow-ai-revenue-recovery",
+  "version": "1.0.0",
+  "description": "Autonomous AI Revenue Recovery & Dunning Intelligence Engine for Razorpay AI Hackathon",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "razorpay",
+    "revenue-recovery",
+    "agentic-ai",
+    "dunning",
+    "hinglish-voice",
+    "mandate-retry",
+    "promise-to-pay"
+  ]
+}
